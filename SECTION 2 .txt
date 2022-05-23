@@ -1,0 +1,60 @@
+-- que1
+
+use studydbt;
+create table TEMPP(
+STRING1 varchar(25),
+STRING2 varchar(25),
+RESULT varchar(35)
+);
+
+desc TEMPP;
+
+delimiter //
+create procedure PROC1(string1 varchar(25),string2 varchar(25))
+begin
+		if(string1 like concat('%',string2,'%')) then
+			insert into TEMPP values(string1,string2,'string2 present inside string1');
+		elseif(string2 like concat('%',string1,'%')) then
+			insert into TEMPP values(string1,string2,'string1 present inside string2');
+        else
+			insert into TEMPP values(string1,string2,'no common string in both string');
+		end if;
+end; //
+delimiter ; 
+
+drop procedure PROC1;
+call PROC1('DAC','CDAC');
+call PROC1('MARCH22','MAR');
+call PROC1('DATABASE','DBT');
+
+select * from TEMPP;
+
+
+
+--    ----------------------------------------------------
+-- que 2
+
+use studydbt;
+
+delimiter //
+create function FUNC1(side1 int,side2 int,side3 int)
+returns boolean
+deterministic
+begin
+		if(side1<=(side2 + side3))then
+			if(side2<=(side1 + side3) and side3 <=(side1 +side2)) then
+				return true;
+			else
+				return false;
+			end if;
+        else
+         return false;
+		end if;
+end; //
+delimiter ;
+
+drop Function FUNC1;
+select  FUNC1(13,15,12) from dual;
+select  FUNC1(10,5,2) from dual;
+select  FUNC1(3,15,2) from dual;
+select  FUNC1(3,5,21) from dual;
